@@ -23,7 +23,7 @@ The `type.csv` would look like this:
 type_uuid,type,object
 c2d2ffb3-02f2-48a7-a021-282bb8447123,occurrence,"puma concolor,rob guralnick,8/8/2012,berkeley"
 05197959-5b88-414c-b97d-86dd79c5553b,taxon,puma concolor
-75197959-5b88-414c-b97d-86dd79c5553b,"rob guralnick,8/8/2012,berkeley"
+75197959-5b88-414c-b97d-86dd79c5553b,event,"rob guralnick,8/8/2012,berkeley"
 ```
 
 The `source_of.csv` would look like this:
