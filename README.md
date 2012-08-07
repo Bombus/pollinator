@@ -1,6 +1,6 @@
-# What is Triplidefier
+# What is Pollinator
 
-This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and subsequently butchered. The goal is to experiment with triplifing Darwin Core records for use in the semantic web.
+This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and subsequently butchered. The goal is to experiment with constructing graph-based views of Darwin Core objects in MapReduce, enabling integration with related objects on the semantic web.
 
 # Experiment
 
