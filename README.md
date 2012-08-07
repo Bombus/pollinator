@@ -1,33 +1,35 @@
-# What is Gulo?
+# What is Triplidefier
 
-![](http://3.bp.blogspot.com/-s1vAPdg_zZM/TZ3bnzUZgVI/AAAAAAAACKo/Mk-Tu-Nil74/s1600/animalangry.jpg)
+This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and subsequently butchered. The goal is to experiment with triplifing Darwin Core records for use in the semantic web.
 
-Gulo is the genus for wolverine, the biggest land-dwelling species of weasel on the planet. It is a stocky and muscular carnivore, resembling a small bear. The wolverine has a reputation for endurance, ferocity, and strength out of proportion to its size, with the capacity to battle with competitors many times its size.
+# Expermient
 
-Gulo is also a VertNet project designed for harvesting Darwin Core Archives, shredding them into small pieces, and loading them into [CartoDB](http://cartodb.com). It's written in the [Clojure](http://clojure.org) programming language and rides on [Cascading](http://www.cascading.org) and [Cascalog](https://github.com/nathanmarz/cascalog) for processing "Big Data" on top of [Hadoop](http://hadoop.apache.org) using [MapReduce](http://research.google.com/archive/mapreduce.html).
+The initial goal is to take a CSV file with Darwin Core records, `dwc.csv`, and MapReduce over it for two outputs. 
 
-# Developing
+First output, a CSV file called `type.csv` that contains a line for each `Taxon`, `Occurrence`, and `Event` in `dwc.csv` along with a UUID. `Taxon` will come from `ScientificName`, `Occurrence` will be the original record itself, and `Event` will be a combination of `Locality`, `Date` ,and `RecordedBy`.
 
-## CartoDB OAuth credentials
+Second output, a CSV file called `source_of.csv` that contains three UUIDs: The UUID of an `Event` or `Taxon`, the UUID of the `Occurrence` that sources it, and a UUID for the row itself.
 
-Gulo depends on an authenticated connection to CartoDB. This requires adding the following file in `resources/creds.json`:
+For example, given the following `dwc.csv` file:
 
-```json
-{
-  "key": "your_cartodb_oauth_key",
-  "secret": "your_cartodb_oauth_secret",
-  "user": "your_cartodb_username",
-  "password": "your_cartodb_password"
-}
+```
+scientificname,recordedby,date,locality
+puma concolor,rob guralnick,8/8/2012,berkeley
 ```
 
-## Dependencies
+The `type.csv` would look like this:
 
-For adding BOM bytes to UTF-8 files, so that CartoDB can detect the encoding, we use the `uconv` program which can be installed on Ubuntu like this:
+```
+type_uuid,type,object
+c2d2ffb3-02f2-48a7-a021-282bb8447123,occurrence,"puma concolor,rob guralnick,8/8/2012,berkeley"
+05197959-5b88-414c-b97d-86dd79c5553b,taxon,puma concolor
+75197959-5b88-414c-b97d-86dd79c5553b,"rob guralnick,8/8/2012,berkeley"
+```
 
-```bash
-$ sudo apt-get install apt-file
-$ sudo apt-file update
-$ apt-file search bin/uconv
-$ sudo apt-get install libicu-dev
+The `source_of.csv` would look like this:
+
+```
+source_uuid,type_uuid,object_uuid
+cffbc118-555c-4829-bbb5-01f718f4697d,c2d2ffb3-02f2-48a7-a021-282bb8447123,05197959-5b88-414c-b97d-86dd79c5553b
+65197959-5b88-414c-b97d-86dd79c5553b,c2d2ffb3-02f2-48a7-a021-282bb8447123,75197959-5b88-414c-b97d-86dd79c5553b
 ```
