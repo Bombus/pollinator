@@ -40,12 +40,17 @@ Read the above outputs into a MapReduce framework.
 Goal 3: 
 Write a query in Java against the data in the MapReduce framework for a single UUID as a query parameter that returns an N3 file containing "source_of" relationships and types.  For example:
 
+```
 function String query(urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123) {
   ...
   return String;
 }
+```
+
 
 Would return:
+```
   urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 a dwc:occurrence .
   urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 ma:source_of urn:uuid:05197959-5b88-414c-b97d-86dd79c5553b .
   urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 ma:source_of urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b .
+```
