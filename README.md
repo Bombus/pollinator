@@ -8,7 +8,9 @@ Goal 1: Take a CSV file with Darwin Core records, `dwc.csv`, and MapReduce over 
 
 First output, a CSV file called `type.csv` that contains a line for each `Taxon`, `Occurrence`, and `Event` in `dwc.csv` along with a UUID. `Taxon` will come from `ScientificName`, `Occurrence` will be the original record itself, and `Event` will be a combination of `Locality`, `Date` ,and `RecordedBy`.  Utilize both a UUID identifier and a QUID identifier -- the purpose of the QUID is to experiment with property-based identifiers.
 
-Second output, a CSV file called `source_of.csv` that contains three UUIDs: A UUID for the row itself (primary key), the UUID of a source object, and a UUID of a target object (The source is the "source_of" the target).
+Second output, a CSV file called `related_to.csv` that contains three UUIDs: A UUID for the row itself (primary key), the UUID of an object, and a UUID of a another object. These objects contain a non-directed relation, and in fact, represent different identifiers for the same thing.  
+
+Third output, a CSV file called `source_of.csv` that contains three UUIDs: A UUID for the row itself (primary key), the UUID of a source object, and a UUID of a target object (The source is the "source_of" the target).
 
 For example, given the following `dwc.csv` file:
 
@@ -20,16 +22,29 @@ puma concolor,rob guralnick,8/8/2012,berkeley
 The `type.csv` would look like this:
 
 ```
-object_uuid,object_quid,type 
-urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:x-quid:t=puma+concolor;c=rob+guralnick;d=8/8/2012;l=berkeley,dwc:occurrence
-urn:uuid:5197959-5b88-414c-b97d-86dd79c5553b,urn:x-quid:t=puma+concolor,dwc:taxon
-urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b,urn:x-quid:c=rob+guralnick;d=8/8/2012;l=berkeley,dwc:event
+object_id,type 
+urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,dwc:occurrence
+urn:uuid:5197959-5b88-414c-b97d-86dd79c5553b,dwc:taxon
+urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b,dwc:event
+urn:x-quid:t=puma+concolor;c=rob+guralnick;d=8/8/2012;l=berkeley,dwc:occurrence
+urn:x-quid:t=puma+concolor,dwc:taxon
+urn:x-quid:c=rob+guralnick;d=8/8/2012;l=berkeley,dwc:event
+
+```
+
+The `related_to.csv` would look like this:
+
+```
+pk_id,object1_id,object2_id 
+urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697e,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:x-quid:t=puma+concolor;c=rob+guralnick;d=8/8/2012;l=berkeley
+urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697f,urn:uuid:5197959-5b88-414c-b97d-86dd79c5553b,urn:x-quid:t=puma+concolor
+urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697g,urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b,urn:x-quid:c=rob+guralnick;d=8/8/2012;l=berkeley
 ```
 
 The `source_of.csv` would look like this:
 
 ```
-pk_uuid,source_uuid,target_uuid
+pk_id,source_id,target_id
 urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697d,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:uuid:05197959-5b88-414c-b97d-86dd79c5553b
 urn:uuid:65197959-5b88-414c-b97d-86dd79c5553b,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b
 ```
