@@ -4,13 +4,31 @@ This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and
 
 # Experiment
 
-Goal 1: Take a CSV file with Darwin Core records, `dwc.csv`, and MapReduce over it to create the following outputs:
+## Goal 1
 
-First output, a CSV file called `type.csv` that contains a line for each `Taxon`, `Occurrence`, and `Event` in `dwc.csv` along with a UUID. `Taxon` will come from `ScientificName`, `Occurrence` will be the original record itself, and `Event` will be a combination of `Locality`, `Date` ,and `RecordedBy`.  Utilize both a UUID identifier and a QUID identifier -- the purpose of the QUID is to experiment with property-based identifiers.
+Take a CSV file with Darwin Core records, `dwc.csv`, and MapReduce over it to create the following outputs:
 
-Second output, a CSV file called `related_to.csv` that contains three UUIDs: A UUID for the row itself (primary key), the UUID of an object, and a UUID of a another object. These objects contain a non-directed relation, and in fact, represent different identifiers for the same thing.  
+### First output
 
-Third output, a CSV file called `source_of.csv` that contains three UUIDs: A UUID for the row itself (primary key), the UUID of a source object, and a UUID of a target object (The source is the "source_of" the target).
+A CSV file called `type.csv` that contains a line for each `Taxon`, `Occurrence`, and `Event` in `dwc.csv` along with a UUID. `Taxon` will come from `ScientificName`, `Occurrence` will be the original record itself, and `Event` will be a combination of `Locality`, `Date` ,and `RecordedBy`.  Utilize both a UUID identifier and a QUID identifier -- the purpose of the QUID is to experiment with property-based identifiers.
+
+### Second output
+
+CSV file called `related_to.csv` that contains three UUIDs: 
+
+1. A UUID for the row itself (primary key)
+2. UUID of an object
+3. UUID of a another object
+
+These objects contain a non-directed relation, and in fact, represent different identifiers for the same thing.  
+
+### Third output
+
+A CSV file called `source_of.csv` that contains three UUIDs: 
+
+1. A UUID for the row itself (primary key)
+2. UUID of a source object
+3. UUID of a target object (The source is the `source_of` the target)
 
 For example, given the following `dwc.csv` file:
 
@@ -49,16 +67,17 @@ urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697d,urn:uuid:c2d2ffb3-02f2-48a7-a021-2
 urn:uuid:65197959-5b88-414c-b97d-86dd79c5553b,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b
 ```
 
-Goal 2: 
+## Goal 2
+
 Read the above outputs into a MapReduce framework.
 
-Goal 3: 
-Write a query in Java against the data in the MapReduce framework for a single UUID as a query parameter that returns an N3 file containing "source_of" relationships and types.  For example:
+## Goal 3
 
-```
-function String query(urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123) {
-  ...
-  return String;
+Write a query in Java against the data in the MapReduce framework for a single UUID as a query parameter that returns an N3 file containing `source_of` relationships and types.  For example:
+
+```java
+public interface Query {
+  public static String execute(String uuid);
 }
 ```
 
