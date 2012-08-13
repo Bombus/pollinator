@@ -67,13 +67,15 @@ urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697d,urn:uuid:c2d2ffb3-02f2-48a7-a021-2
 urn:uuid:65197959-5b88-414c-b97d-86dd79c5553b,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b
 ```
 
+Do the same on a test dataset
+
 ## Goal 2
 
-Read the above outputs into a MapReduce framework.
+Bulk to CSV files to AppEngine datastore.
 
 ## Goal 3
 
-Write a query in Java against the data in the MapReduce framework for a single UUID as a query parameter that returns an N3 file containing `source_of` relationships and types.  For example:
+Write a query API and client, then construct a query against that in Java against the data in the AppEngine datastore for a single UUID as a query parameter that returns an N3 file containing `source_of` relationships and types.  For example:
 
 ```java
 public interface Query {
