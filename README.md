@@ -22,21 +22,8 @@ catalogNumber,recordedBy,scientificName,eventDate,decimalLatitude,decimalLongitu
 
 Then we'll then MapReduce over it to create some outputs.
 
-### First output
 
-A CSV file called `type.csv` that contains a line for each `Taxon`, `Occurrence`, and `Event` in `dwc.csv` along with a UUID. `Taxon` will come from `ScientificName`, `Occurrence` will be the original record itself, and `Event` will be a combination of `Locality`, `Date` ,and `RecordedBy`.  Utilize both a UUID identifier and a QUID identifier -- the purpose of the QUID is to experiment with property-based identifiers.
 
-### Second output
-
-CSV file called `related_to.csv` that contains three UUIDs: 
-
-1. A UUID for the row itself (primary key)
-2. UUID of an object
-3. UUID of a another object
-
-These objects contain a non-directed relation, and in fact, represent different identifiers for the same thing.  
-
-### Third output
 
 A CSV file called `source_of.csv` that contains three UUIDs: 
 
@@ -44,44 +31,66 @@ A CSV file called `source_of.csv` that contains three UUIDs:
 2. UUID of a source object
 3. UUID of a target object (The source is the `source_of` the target)
 
-For example, given the following `dwc.csv` file:
+
+### First output
+The type output lists identifiers and what type they are.  `type.csv` would look like this:
 
 ```
-scientificname,recordedby,date,locality
-puma concolor,rob guralnick,8/8/2012,berkeley
+ID  Type
+1	dwc:Taxon
+2	dwc:Taxon
+3	dwc:Taxon
+4	dwc:Taxon
+5	dwc:Taxon
+6	dwc:Taxon
+7	dwc:Taxon
+8	dwc:Taxon
+9	dwc:Locality
+10	dwc:Locality
+11	dwc:Locality
+12	dwc:Locality
+13	dwc:Locality
+14	dwc:Locality
+15	dwc:Locality
+16	dwc:Locality
+17	dwc:Occurrence
+18	dwc:Occurrence
+19	dwc:Occurrence
+20	dwc:Occurrence
+21	dwc:Occurrence
+22	dwc:Occurrence
+23	dwc:Occurrence
+24	dwc:Occurrence
+
 ```
 
-The `type.csv` would look like this:
-
-```
-object_id,type 
-urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,dwc:occurrence
-urn:uuid:5197959-5b88-414c-b97d-86dd79c5553b,dwc:taxon
-urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b,dwc:event
-urn:x-quid:t=puma+concolor;c=rob+guralnick;d=8/8/2012;l=berkeley,dwc:occurrence
-urn:x-quid:t=puma+concolor,dwc:taxon
-urn:x-quid:c=rob+guralnick;d=8/8/2012;l=berkeley,dwc:event
-
-```
-
-The `related_to.csv` would look like this:
-
-```
-pk_id,object1_id,object2_id 
-urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697e,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:x-quid:t=puma+concolor;c=rob+guralnick;d=8/8/2012;l=berkeley
-urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697f,urn:uuid:5197959-5b88-414c-b97d-86dd79c5553b,urn:x-quid:t=puma+concolor
-urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697g,urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b,urn:x-quid:c=rob+guralnick;d=8/8/2012;l=berkeley
-```
+### Second output
 
 The `source_of.csv` would look like this:
 
 ```
-pk_id,source_id,target_id
-urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697d,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:uuid:05197959-5b88-414c-b97d-86dd79c5553b
-urn:uuid:65197959-5b88-414c-b97d-86dd79c5553b,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b
+pk  source	target
+100	9	17
+101	17	1
+102	10	18
+103	18	2
+104	11	19
+105	19	3
+106	12	20
+107	20	4
+108	13	21
+109	21	5
+110	14	22
+111	22	6
+112	15	23
+113	23	7
+114	16	24
+115	24	8
 ```
 
-Do the same on a test dataset
+### Third output
+
+The `related_to.csv` would look like:
 
 ## Goal 2
 
