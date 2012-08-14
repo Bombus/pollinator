@@ -6,7 +6,7 @@ This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and
 
 ## Goal 1
 
-Take a CSV file with Darwin Core records, `dwc.csv`, and MapReduce over it to create the following outputs:
+Take a CSV file with Darwin Core records, `dwc.csv`:
 
 ```
 catalogNumber,recordedBy,scientificName,eventDate,decimalLatitude,decimalLongitude,identifiedBy
@@ -19,6 +19,8 @@ catalogNumber,recordedBy,scientificName,eventDate,decimalLatitude,decimalLongitu
 8,Nico Cellinese,Acanthella pulchra,8/8/12,37.3,-120.4,Nico Cellinese
 9,Sarah Hinman,Culex Tarsalis,8/8/12,37.3,-120.5,Sarah Hinman
 ```
+
+Then we'll then MapReduce over it to create some outputs.
 
 ### First output
 
