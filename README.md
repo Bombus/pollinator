@@ -6,7 +6,21 @@ This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and
 
 ## Goal 1
 
-Take a CSV file with Darwin Core records, `dwc.csv`, and MapReduce over it to create the following outputs:
+Take a CSV file with Darwin Core records, `dwc.csv`:
+
+```
+catalogNumber,recordedBy,scientificName,eventDate,decimalLatitude,decimalLongitude,identifiedBy
+1,Rob Guralnick,Puma concolor,8/8/12,37.1,-120.1,Aaron Steele
+2,John Deck,Ursus arctos horribilis,8/8/12,37.2,-120.1,Rob Guralnick
+3,Aaron Steele,Bufu bufo,8/8/12,37.2,-120.2,Dave Wake
+4,Neil Davies,Aedes washinoi,8/8/12,37.1,-120.2,Neil Davies
+6,Michelle Koo,Zaedyus pichiy,8/8/12,37.1,-120.3,Michelle Koo
+7,John Kunze,Carduelis tristis,8/8/12,37.3,-120.3,John Kunze
+8,Nico Cellinese,Acanthella pulchra,8/8/12,37.3,-120.4,Nico Cellinese
+9,Sarah Hinman,Culex Tarsalis,8/8/12,37.3,-120.5,Sarah Hinman
+```
+
+Then we'll then MapReduce over it to create some outputs.
 
 ### First output
 
@@ -94,3 +108,11 @@ Would return:
 
 Sketch out EZID use cases, implementation from context of the above exercises.  Best way to assign identifiers in the above process.
 
+Outputs:
+Subversion code used is from  https://code.ecoinformatics.org/code/ezid/trunk/ as a maven project.  We mint identifiers like:
+```java
+EZIDService ezid = new EZIDService();
+ezid.login(username,password);
+// ark:/99999/fk4 is the temporary ark shoulder
+String newId = ezid.mintIdentifier("ark:/99999/fk4", null);
+```
