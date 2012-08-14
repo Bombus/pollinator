@@ -22,10 +22,12 @@
   (apply str (interpose " " strs)))
 
 ;; Slurps resources/creds.json for OAuth: {"key" "secret" "user" "password"}
-(def creds (read-json (slurp (io/resource "creds.json"))))
+(def creds "";(read-json (slurp (io/resource "creds.json")))
+  )
 
 ;; Slurps resources/s3.json for Amazon S3: {"access-key" "secret-key"}
-(def s3-creds (read-json (slurp (io/resource "s3.json"))))
+(def s3-creds "";; (read-json (slurp (io/resource "s3.json")))
+  )
 
 (defn- drop-column
   "Drop the supplied column from the supplied table or just return the SQL."

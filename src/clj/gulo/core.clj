@@ -12,14 +12,14 @@
 (def ^:const LON 23)
 (def ^:const SCINAME 160)
 
-(defn- my-filter [& vals] (println (str "VAL--------------" vals)) true)
+(defn my-filter [& vals] (println (str "VAL--------------" vals)) true)
 
-(defn- makeline
+(defn makeline
   "Returns a string line by joining a sequence of values on tab."
   [& vals]
   (clojure.string/join \tab vals))
 
-(defn- splitline
+(defn splitline
   "Returns vector of line values by splitting on tab."
   [line]
   (vec (.split line "\t")))
