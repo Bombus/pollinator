@@ -108,3 +108,10 @@ Would return:
 
 Sketch out EZID use cases, implementation from context of the above exercises.  Best way to assign identifiers in the above process.
 
+Subversion code used is from  https://code.ecoinformatics.org/code/ezid/trunk/ as a maven project.  We mint identifiers like:
+```java
+EZIDService ezid = new EZIDService();
+ezid.login(username,password);
+// ark:/99999/fk4 is the temporary ark shoulder
+String newId = ezid.mintIdentifier("ark:/99999/fk4", null);
+```
