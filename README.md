@@ -8,6 +8,18 @@ This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and
 
 Take a CSV file with Darwin Core records, `dwc.csv`, and MapReduce over it to create the following outputs:
 
+```
+catalogNumber,recordedBy,scientificName,eventDate,decimalLatitude,decimalLongitude,identifiedBy
+1,Rob Guralnick,Puma concolor,8/8/12,37.1,-120.1,Aaron Steele
+2,John Deck,Ursus arctos horribilis,8/8/12,37.2,-120.1,Rob Guralnick
+3,Aaron Steele,Bufu bufo,8/8/12,37.2,-120.2,Dave Wake
+4,Neil Davies,Aedes washinoi,8/8/12,37.1,-120.2,Neil Davies
+6,Michelle Koo,Zaedyus pichiy,8/8/12,37.1,-120.3,Michelle Koo
+7,John Kunze,Carduelis tristis,8/8/12,37.3,-120.3,John Kunze
+8,Nico Cellinese,Acanthella pulchra,8/8/12,37.3,-120.4,Nico Cellinese
+9,Sarah Hinman,Culex Tarsalis,8/8/12,37.3,-120.5,Sarah Hinman
+```
+
 ### First output
 
 A CSV file called `type.csv` that contains a line for each `Taxon`, `Occurrence`, and `Event` in `dwc.csv` along with a UUID. `Taxon` will come from `ScientificName`, `Occurrence` will be the original record itself, and `Event` will be a combination of `Locality`, `Date` ,and `RecordedBy`.  Utilize both a UUID identifier and a QUID identifier -- the purpose of the QUID is to experiment with property-based identifiers.
