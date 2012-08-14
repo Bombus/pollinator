@@ -108,6 +108,7 @@ Would return:
 
 Sketch out EZID use cases, implementation from context of the above exercises.  Best way to assign identifiers in the above process.
 
+Outputs:
 Subversion code used is from  https://code.ecoinformatics.org/code/ezid/trunk/ as a maven project.  We mint identifiers like:
 ```java
 EZIDService ezid = new EZIDService();
