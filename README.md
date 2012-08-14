@@ -90,3 +90,7 @@ Would return:
   urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 ma:source_of urn:uuid:05197959-5b88-414c-b97d-86dd79c5553b .
   urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 ma:source_of urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b .
 ```
+## Goal 4
+
+Sketch out EZID use cases, implementation from context of the above exercises.  Best way to assign identifiers in the above process.
+
