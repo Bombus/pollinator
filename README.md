@@ -42,7 +42,7 @@ ark:/9999/fk434,dwc:Occurrence
 The `source_of.csv` describes the relationships between the identifiers. In this example, dwc:Locality source_of dwc:Occurrence source_of dwc:Taxon:
 
 ```
-pk  source	target
+source	target
 ark:/9999/fk421,ark:/9999/fk431
 ark:/9999/fk431,ark:/9999/fk411
 ark:/9999/fk422,ark:/9999/fk432
@@ -53,10 +53,9 @@ ark:/9999/fk424,ark:/9999/fk434
 ark:/9999/fk434,ark:/9999/fk414
 ```
 
-
 ## Goal 2
 
-Bulk to CSV files to AppEngine datastore.
+Bulk load files to CartoDB
 
 ## Goal 3
 
@@ -69,12 +68,8 @@ public interface Query {
 ```
 
 
-Would return:
-```
-  urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 a dwc:occurrence .
-  urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 ma:source_of urn:uuid:05197959-5b88-414c-b97d-86dd79c5553b .
-  urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 ma:source_of urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b .
-```
+Would return objects and derivitives.
+
 ## Goal 4
 
 Sketch out EZID use cases, implementation from context of the above exercises.  Best way to assign identifiers in the above process.
