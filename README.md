@@ -13,84 +13,46 @@ catalogNumber,recordedBy,scientificName,eventDate,decimalLatitude,decimalLongitu
 1,Rob Guralnick,Puma concolor,8/8/12,37.1,-120.1,Aaron Steele
 2,John Deck,Ursus arctos horribilis,8/8/12,37.2,-120.1,Rob Guralnick
 3,Aaron Steele,Bufu bufo,8/8/12,37.2,-120.2,Dave Wake
-4,Neil Davies,Aedes washinoi,8/8/12,37.1,-120.2,Neil Davies
-6,Michelle Koo,Zaedyus pichiy,8/8/12,37.1,-120.3,Michelle Koo
-7,John Kunze,Carduelis tristis,8/8/12,37.3,-120.3,John Kunze
-8,Nico Cellinese,Acanthella pulchra,8/8/12,37.3,-120.4,Nico Cellinese
-9,Sarah Hinman,Culex Tarsalis,8/8/12,37.3,-120.5,Sarah Hinman
+4,Nico Cellinese,Acanthella pulchra,8/8/12,37.3,-120.4,Nico Cellinese
 ```
 
 Then we'll then MapReduce over it to create some outputs.
 
-
-
-
-A CSV file called `source_of.csv` that contains three UUIDs: 
-
-1. A UUID for the row itself (primary key)
-2. UUID of a source object
-3. UUID of a target object (The source is the `source_of` the target)
-
-
 ### First output
-The type output lists identifiers and what type they are.  `type.csv` would look like this:
+The type output lists identifiers and what type they are. `type.csv` would look like this:
 
 ```
-ID  Type
-1	dwc:Taxon
-2	dwc:Taxon
-3	dwc:Taxon
-4	dwc:Taxon
-5	dwc:Taxon
-6	dwc:Taxon
-7	dwc:Taxon
-8	dwc:Taxon
-9	dwc:Locality
-10	dwc:Locality
-11	dwc:Locality
-12	dwc:Locality
-13	dwc:Locality
-14	dwc:Locality
-15	dwc:Locality
-16	dwc:Locality
-17	dwc:Occurrence
-18	dwc:Occurrence
-19	dwc:Occurrence
-20	dwc:Occurrence
-21	dwc:Occurrence
-22	dwc:Occurrence
-23	dwc:Occurrence
-24	dwc:Occurrence
-
+ID,Type
+ark:/9999/fk411,dwc:Taxon
+ark:/9999/fk412,dwc:Taxon
+ark:/9999/fk413,dwc:Taxon
+ark:/9999/fk414,dwc:Taxon
+ark:/9999/fk421,dwc:Locality
+ark:/9999/fk422,dwc:Locality
+ark:/9999/fk423,dwc:Locality
+ark:/9999/fk424,dwc:Locality
+ark:/9999/fk431,dwc:Occurrence
+ark:/9999/fk432,dwc:Occurrence
+ark:/9999/fk433,dwc:Occurrence
+ark:/9999/fk434,dwc:Occurrence
 ```
 
 ### Second output
 
-The `source_of.csv` would look like this:
+The `source_of.csv` describes the relationships between the identifiers. In this example, dwc:Locality source_of dwc:Occurrence source_of dwc:Taxon:
 
 ```
 pk  source	target
-100	9	17
-101	17	1
-102	10	18
-103	18	2
-104	11	19
-105	19	3
-106	12	20
-107	20	4
-108	13	21
-109	21	5
-110	14	22
-111	22	6
-112	15	23
-113	23	7
-114	16	24
-115	24	8
+ark:/9999/fk421,ark:/9999/fk431
+ark:/9999/fk431,ark:/9999/fk411
+ark:/9999/fk422,ark:/9999/fk432
+ark:/9999/fk432,ark:/9999/fk412
+ark:/9999/fk423,ark:/9999/fk433
+ark:/9999/fk433,ark:/9999/fk413
+ark:/9999/fk424,ark:/9999/fk434
+ark:/9999/fk434,ark:/9999/fk414
 ```
 
-### Third output
-
-The `related_to.csv` would look like:
 
 ## Goal 2
 
