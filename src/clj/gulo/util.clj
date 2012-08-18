@@ -1,7 +1,15 @@
 (ns gulo.util
   "This namespace contains utility functions."
   (:use [dwca.core :as dwca])
-  (:import [org.gbif.dwc.record DarwinCoreRecord]))
+  (:import [edu.ucsb.nceas.ezid EZIDService]
+           [org.gbif.dwc.record DarwinCoreRecord]))
+
+(def ezid
+  (let [ezid (EZIDService.)]
+    (.login ezid "apitest" "apitest")
+    ezid))
+
+(defn mint-ezid [& x] (.mintIdentifier ezid "ark:/99999/fk4" nil))
 
 (defn gen-uuid
   "Return a randomly generated UUID string."

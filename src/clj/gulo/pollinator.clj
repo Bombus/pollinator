@@ -7,7 +7,7 @@
         [dwca.core :as dwca])
   (:require [clojure.string :as s]
             [clojure.java.io :as io])
-  (:import [org.gbif.dwc.record DarwinCoreRecord]))
+  (:import [edu.ucsb.nceas.ezid EZIDService]))
 
 ;; Ordered column names from the input occurrence file.
 (def occ-fields ["?occurrenceid" "?catalognumber" "?recordedby" "?scientificname"
@@ -30,23 +30,18 @@
   [line]
   (vec (.split line "\t")))
 
-;; (defn id
-;;   "Return occid from supplied textline."
-;;   [line]
-;;   (nth (split-line line) OCCID))
-
 (defn loc
   "Return 3-tuple [occid lat lon] from supplied textline."
   [line]
   (let [vals (split-line line)]
-    (map (partial nth vals) [LATI LONI])))
+    (map (partial nth vals) [4 5])))
 
 (defn tax
   "Return 7-tuple [kingdom phylum class order family genus scientificname] from
   supplied textline."
   [line]
   (let [vals (split-line line)]
-    (map (partial nth vals) [SNAME])))
+    (map (partial nth vals) [2])))
 
 (defn locname
   "Return 4-tuple [occid lat lon name] from supplied textline."
@@ -55,44 +50,54 @@
         [s] (tax line)]
     [lat lon s]))
 
-(defn output-query
-  "Execute query against supplied source of occ, loc, tax, and taxloc textlines
-  for occurrence ouput rows that include GUIDs for taxonomy and location. Sinks
-  rows to supplied sink path."
+(defn occ-source-query
+  "Execute query to create occurrence source-of taxon table."
   [occ-path tax-path loc-path sink-path]
-  (let [result-vector out-fields
-        occ-source (hfs-textline occ-path)
+  (let [occ-source (hfs-textline occ-path)
         tax-source (hfs-textline tax-path)
         loc-source (hfs-textline loc-path)
-        sink (taps/hfs-delimited sink-path :sinkmode :replace)        
-        uniques (<- [?tax-id ?loc-id ?s ?lat ?lon]
-                    (tax-source ?tax-line)
-                    (split-line ?tax-line :> ?tax-id ?s)
-                    (loc-source ?loc-line)
-                    (split-line ?loc-line :> ?loc-id ?lat ?lon)
-                    (occ-source ?occ-line)
-                    (locname ?occ-line :> ?lat ?lon ?s))]
+        sink (hfs-textline sink-path :sinkmode :replace)]
     (?<- sink
-         out-fields
-         (uniques ?tax-id ?loc-id ?scientificname ?decimallatitude ?decimallongitude)
+         [?line]
+         (tax-source ?tax-line)
+         (split-line ?tax-line :> ?tax-id ?tax-type ?scientificname)
          (occ-source ?occ-line)
-         (split-line ?occ-line :>> occ-fields))))
+         (split-line ?occ-line :> ?ezid ?occ-type ?catalognumber ?recordedby
+                     ?scientificname ?eventdate ?decimallatitude ?decimallongitude
+                     ?identifiedby)
+         (core/makeline ?ezid ?tax-id :> ?line)
+         (:distinct true))))
+
+(defn loc-source-query
+  "Execute query to create location source-of occurrence table."
+  [occ-path tax-path loc-path sink-path]
+  (let [occ-source (hfs-textline occ-path)
+        tax-source (hfs-textline tax-path)
+        loc-source (hfs-textline loc-path)
+        sink (hfs-textline sink-path :sinkmode :replace)]
+    (?<- sink
+         [?line]
+         (loc-source ?loc-line)
+         (split-line ?loc-line :> ?loc-id ?loc-type ?decimallatitude ?decimallongitude)
+         (occ-source ?occ-line)
+         (split-line ?occ-line :> ?ezid ?occ-type ?catalognumber ?recordedby
+                     ?scientificname ?eventdate ?decimallatitude ?decimallongitude
+                     ?identifiedby)
+         (core/makeline ?loc-id ?ezid :> ?line)
+         (:distinct true))))
 
 (defn occ-query
-  "Execute query against supplied source of occurrence textlines that adds UUIDs
-  to each record."
+  "Create type.csv output for occurrences by generating uniques with EZIDs."
   [source sink-path]
   (let [sink (hfs-textline sink-path :sinkmode :replace)]
     (?<- sink
          [?line]
          (source ?occ)
-         (util/gen-uuid :> ?uuid)
-         (core/makeline ?uuid ?occ :> ?line))))
+         (util/mint-ezid :> ?ezid)
+         (core/makeline ?ezid "dwc:Occurrence" ?occ :> ?line))))
 
 (defn tax-query
-  "Execute query against supplied source of occurrence textlines for unique
-  taxonomies. Sink tuples [uuid kingdom phylum class order family genus scientificname]
-  to sink-path."
+  "Create type.csv output for taxonomies by generating uniques with EZIDs."
   [source sink-path]
   (let [sink (hfs-textline sink-path :sinkmode :replace)
         uniques (<- [?s]
@@ -103,12 +108,11 @@
     (?<- sink
          [?line]
          (uniques ?s)
-         (util/gen-uuid :> ?uuid)
-         (core/makeline ?uuid ?s :> ?line))))
+         (util/mint-ezid :> ?ezid)
+         (core/makeline ?ezid "dwc:Taxon" ?s :> ?line))))
 
 (defn loc-query
-  "Execute query against supplied source of occurrence textlines for unique
-  coordinates. Sink tuples [uuid lat lon wkt] to sink-path."
+  "Create type.csv output for locations by generating uniques with EZIDs."
   [source sink-path]
   (let [sink (hfs-textline sink-path :sinkmode :replace)
         uniques (<- [?lat ?lon]
@@ -119,6 +123,21 @@
     (?<- sink
          [?line]
          (uniques ?lat ?lon)
-         (util/gen-uuid :> ?uuid)
-         (core/makeline ?uuid ?lat ?lon :> ?line)
+         (util/mint-ezid :> ?ezid)
+         (core/makeline ?ezid "dwc:Locality" ?lat ?lon :> ?line)
          (:distinct true))))
+
+(defn triplify!
+  "Triplify supplied input data source and save outputs to hfs directory."
+  [hfs data]
+  (let [source (hfs-textline data)
+        loc-sink (str hfs "/loc")
+        tax-sink (str hfs "/tax")
+        occ-sink (str hfs "/occ")
+        locsource-sink (str hfs "/locsource")
+        occsource-sink (str hfs "/occsource")]
+    (loc-query source loc-sink)
+    (tax-query source tax-sink)
+    (occ-query source occ-sink)
+    (loc-source-query occ-sink tax-sink loc-sink locsource-sink)
+    (occ-source-query occ-sink tax-sink loc-sink occsource-sink)))

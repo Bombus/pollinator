@@ -14,6 +14,8 @@
 
 (defn my-filter [& vals] (println (str "VAL--------------" vals)) true)
 
+(defmapop makeit [& x] [(vec x)])
+
 (defn makeline
   "Returns a string line by joining a sequence of values on tab."
   [& vals]
