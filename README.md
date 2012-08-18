@@ -13,79 +13,49 @@ catalogNumber,recordedBy,scientificName,eventDate,decimalLatitude,decimalLongitu
 1,Rob Guralnick,Puma concolor,8/8/12,37.1,-120.1,Aaron Steele
 2,John Deck,Ursus arctos horribilis,8/8/12,37.2,-120.1,Rob Guralnick
 3,Aaron Steele,Bufu bufo,8/8/12,37.2,-120.2,Dave Wake
-4,Neil Davies,Aedes washinoi,8/8/12,37.1,-120.2,Neil Davies
-6,Michelle Koo,Zaedyus pichiy,8/8/12,37.1,-120.3,Michelle Koo
-7,John Kunze,Carduelis tristis,8/8/12,37.3,-120.3,John Kunze
-8,Nico Cellinese,Acanthella pulchra,8/8/12,37.3,-120.4,Nico Cellinese
-9,Sarah Hinman,Culex Tarsalis,8/8/12,37.3,-120.5,Sarah Hinman
+4,Nico Cellinese,Acanthella pulchra,8/8/12,37.3,-120.4,Nico Cellinese
 ```
 
 Then we'll then MapReduce over it to create some outputs.
 
 ### First output
+The type output lists identifiers and what type they are. `type.csv` would look like this:
 
-A CSV file called `type.csv` that contains a line for each `Taxon`, `Occurrence`, and `Event` in `dwc.csv` along with a UUID. `Taxon` will come from `ScientificName`, `Occurrence` will be the original record itself, and `Event` will be a combination of `Locality`, `Date` ,and `RecordedBy`.  Utilize both a UUID identifier and a QUID identifier -- the purpose of the QUID is to experiment with property-based identifiers.
+```
+ID,Type
+ark:/9999/fk411,dwc:Taxon
+ark:/9999/fk412,dwc:Taxon
+ark:/9999/fk413,dwc:Taxon
+ark:/9999/fk414,dwc:Taxon
+ark:/9999/fk421,dwc:Locality
+ark:/9999/fk422,dwc:Locality
+ark:/9999/fk423,dwc:Locality
+ark:/9999/fk424,dwc:Locality
+ark:/9999/fk431,dwc:Occurrence
+ark:/9999/fk432,dwc:Occurrence
+ark:/9999/fk433,dwc:Occurrence
+ark:/9999/fk434,dwc:Occurrence
+```
 
 ### Second output
 
-CSV file called `related_to.csv` that contains three UUIDs: 
-
-1. A UUID for the row itself (primary key)
-2. UUID of an object
-3. UUID of a another object
-
-These objects contain a non-directed relation, and in fact, represent different identifiers for the same thing.  
-
-### Third output
-
-A CSV file called `source_of.csv` that contains three UUIDs: 
-
-1. A UUID for the row itself (primary key)
-2. UUID of a source object
-3. UUID of a target object (The source is the `source_of` the target)
-
-For example, given the following `dwc.csv` file:
+The `source_of.csv` describes the relationships between the identifiers. In this example, dwc:Locality source_of dwc:Occurrence source_of dwc:Taxon:
 
 ```
-scientificname,recordedby,date,locality
-puma concolor,rob guralnick,8/8/2012,berkeley
+source	target
+ark:/9999/fk421,ark:/9999/fk431
+ark:/9999/fk431,ark:/9999/fk411
+ark:/9999/fk422,ark:/9999/fk432
+ark:/9999/fk432,ark:/9999/fk412
+ark:/9999/fk423,ark:/9999/fk433
+ark:/9999/fk433,ark:/9999/fk413
+ark:/9999/fk424,ark:/9999/fk434
+ark:/9999/fk434,ark:/9999/fk414
 ```
-
-The `type.csv` would look like this:
-
-```
-object_id,type 
-urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,dwc:occurrence
-urn:uuid:5197959-5b88-414c-b97d-86dd79c5553b,dwc:taxon
-urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b,dwc:event
-urn:x-quid:t=puma+concolor;c=rob+guralnick;d=8/8/2012;l=berkeley,dwc:occurrence
-urn:x-quid:t=puma+concolor,dwc:taxon
-urn:x-quid:c=rob+guralnick;d=8/8/2012;l=berkeley,dwc:event
-
-```
-
-The `related_to.csv` would look like this:
-
-```
-pk_id,object1_id,object2_id 
-urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697e,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:x-quid:t=puma+concolor;c=rob+guralnick;d=8/8/2012;l=berkeley
-urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697f,urn:uuid:5197959-5b88-414c-b97d-86dd79c5553b,urn:x-quid:t=puma+concolor
-urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697g,urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b,urn:x-quid:c=rob+guralnick;d=8/8/2012;l=berkeley
-```
-
-The `source_of.csv` would look like this:
-
-```
-pk_id,source_id,target_id
-urn:uuid:cffbc118-555c-4829-bbb5-01f718f4697d,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:uuid:05197959-5b88-414c-b97d-86dd79c5553b
-urn:uuid:65197959-5b88-414c-b97d-86dd79c5553b,urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123,urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b
-```
-
-Do the same on a test dataset
 
 ## Goal 2
 
-Bulk to CSV files to AppEngine datastore.
+Bulk load files to CartoDB
 
 ## Goal 3
 
@@ -98,12 +68,8 @@ public interface Query {
 ```
 
 
-Would return:
-```
-  urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 a dwc:occurrence .
-  urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 ma:source_of urn:uuid:05197959-5b88-414c-b97d-86dd79c5553b .
-  urn:uuid:c2d2ffb3-02f2-48a7-a021-282bb8447123 ma:source_of urn:uuid:75197959-5b88-414c-b97d-86dd79c5553b .
-```
+Would return objects and derivitives.
+
 ## Goal 4
 
 Sketch out EZID use cases, implementation from context of the above exercises.  Best way to assign identifiers in the above process.
