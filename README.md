@@ -4,7 +4,7 @@ This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and
 
 # Experiment
 
-See the [[Runtime]] wiki page for how to run the follwoing Pollinator experiments on your laptop.
+See the [Runtime](https://github.com/Bombus/pollinator/wiki/Runtime) wiki page for how to run the follwoing Pollinator experiments on your laptop.
 
 ## Goal 1
 
