@@ -4,6 +4,8 @@ This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and
 
 # Experiment
 
+See the [[Runtime]] wiki page for how to run the follwoing Pollinator experiments on your laptop.
+
 ## Goal 1
 
 Take a CSV file with Darwin Core records, `dwc.csv`:
