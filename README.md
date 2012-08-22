@@ -2,9 +2,13 @@
 
 This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and subsequently butchered. The goal is to experiment with constructing graph-based views of Darwin Core objects in MapReduce, enabling integration with related objects on the semantic web.
 
-# Experiment
+# Outcomes
 
-See the [Runtime](https://github.com/Bombus/pollinator/wiki/Runtime) wiki page for how to run the follwoing Pollinator experiments on your laptop.
+We forked and modified the VertNet Gulo repository into this repository (Pollinator) that supports generating [EZIDs](http://www.cdlib.org/services/uc3/ezid/) and triplifying Darwin Core CSV files using MapReduce. We have the [Runtime](https://github.com/Bombus/pollinator/wiki/Runtime) wiki page that describes how to run Pollinator on your laptop.
+
+Also, we made the [EZID Java client](https://code.ecoinformatics.org/code/ezid/trunk/) library [available in Clojure](https://clojars.org/edu.ucsb.nceas/ezid) and moved it to a new project in [new project](https://github.com/mbjones/ezid) in GitHub. 
+
+# Experiment
 
 ## Goal 1
 
