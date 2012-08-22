@@ -4,7 +4,7 @@ This project was forked from [VertNet Gulo](https://github.com/VertNet/gulo) and
 
 # Outcomes
 
-We modified VertNet Gulo to support generating [EZIDs](http://www.cdlib.org/services/uc3/ezid/) and triplifying Darwin Core CSV files using MapReduce. We have the [Runtime](https://github.com/Bombus/pollinator/wiki/Runtime) wiki page that describes how to run Pollinator on your laptop using an example CSV file. We also made the [EZID Java client](https://code.ecoinformatics.org/code/ezid/trunk/) library [available in Clojure](https://clojars.org/edu.ucsb.nceas/ezid) and moved it to a new project in [new project](https://github.com/mbjones/ezid) in GitHub. 
+We modified VertNet Gulo to support generating [EZIDs](http://www.cdlib.org/services/uc3/ezid/) and triplifying Darwin Core CSV files using MapReduce. We have the [Runtime](https://github.com/Bombus/pollinator/wiki/Runtime) wiki page that describes how to run Pollinator on your laptop using an example CSV file. We also made the [EZID Java client](https://code.ecoinformatics.org/code/ezid/trunk/) library [available in Clojure](https://clojars.org/edu.ucsb.nceas/ezid) and moved it to a [new project](https://github.com/mbjones/ezid) in GitHub. 
 
 # Experiment
 
